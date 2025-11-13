@@ -1,55 +1,27 @@
-<!-- warga/templates/warga/pengaduan_list.html -->
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Daftar Semua Pengaduan Warga</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        ul { list-style-type: none; padding: 0; }
-        li { border: 1px solid #ddd; margin: 10px 0; padding: 15px; border-radius: 5px; }
-        .status-baru { color: orange; }
-        .status-diproses { color: yellow; }
-        .status-selesai { color: green; }
-    </style>
-</head>
-<body>
-    <h1>Daftar Semua Pengaduan Warga Kelurahan</h1>
-    
-    <!-- Opsional: Link filter status (test .filter() dari get_queryset) -->
-    <p>
-        <strong>Filter Status:</strong>
-        <a href="{% url 'pengaduan-list' %}?status=BARU">Baru</a> |
-        <a href="{% url 'pengaduan-list' %}?status=DIPROSES">Diproses</a> |
-        <a href="{% url 'pengaduan-list' %}?status=SELESAI">Selesai</a> |
-        <a href="{% url 'pengaduan-list' %}">Semua</a>
-    </p>
-    
-    <!-- Indikator jumlah item (test QuerySet length) -->
-    <p>Total pengaduan: {{ object_list|length }}</p>
-    
-    <!-- Looping utama: {% for aduan in object_list %} (petunjuk looping) -->
-    <ul>
-        {% for aduan in object_list %}
-            <li>
-                <h3>{{ aduan.judul }}</h3>
-                <p><strong>Pelapor:</strong> {{ aduan.pelapor.nama_lengkap }}</p>  <!-- Tantangan utama: Akses relasi ForeignKey -->
-                <p><strong>Deskripsi:</strong> {{ aduan.deskripsi|truncatewords:20 }}</p>  <!-- Potong agar ringkas -->
-                <p>
-                    <strong>Status:</strong> 
-                    <span class="{% if aduan.status == 'BARU' %}status-baru{% elif aduan.status == 'DIPROSES' %}status-diproses{% else %}status-selesai{% endif %}">
-                        {{ aduan.get_status_display }}  <!-- Label ramah dari choices (materi D) -->
-                    </span>
-                </p>
-                <p><strong>Tanggal Lapor:</strong> {{ aduan.tanggal_lapor|date:"d M Y H:i" }}</p>
-                <hr>  <!-- Pemisah antar item -->
-            </li>
-        {% empty %}
-            <li>Tidak ada pengaduan yang terdaftar saat ini. <a href="{% url 'warga-list' %}">Lihat daftar warga</a>.</li>
-        {% endfor %}
-    </ul>
-    
-    <!-- Link balik ke daftar warga (sesuai fix sebelumnya: 'warga-list') -->
-    <a href="{% url 'warga-list' %}">Kembali ke Daftar Warga</a>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block content %}
+<h1>Daftar Pengaduan</h1>
+
+<table border="1" cellpadding="5">
+  <tr>
+    <th>Pelapor</th>
+    <th>Isi Pengaduan</th>
+    <th>Tanggal</th>
+  </tr>
+  {% for pengaduan in pengaduan_list %}
+    <tr>
+      <td>{{ pengaduan.pelapor.nama_lengkap }}</td>
+      <td>{{ pengaduan.isi_pengaduan }}</td>
+      <td>{{ pengaduan.tanggal }}</td>
+    </tr>
+  {% empty %}
+    <tr>
+      <td colspan="3">Belum ada pengaduan yang terdaftar.</td>
+    </tr>
+  {% endfor %}
+</table>
+
+<br>
+<a href="{% url 'pengaduan-tambah' %}">Tambah Pengaduan Baru</a>
+<a href="{% url 'warga-list' %}">Kembali ke Daftar Warga</a>
+{% endblock %}

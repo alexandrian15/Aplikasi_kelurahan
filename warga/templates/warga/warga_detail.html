@@ -10,7 +10,7 @@
     <p><strong>NIK:</strong> {{ object.nik }}</p>
     <p><strong>Alamat:</strong> {{ object.alamat }}</p>
     <p><strong>No. Telepon:</strong> {{ object.no_telepon|default:"Tidak ada" }}</p>  <!-- Field baru dari migrasi -->
-    <p><strong>Tanggal Registrasi:</strong> {{ object.tanggal_registrasi|date:"d M Y H:i" }}</p>  <!-- Field baru -->
+    <p><strong>Tanggal Registrasi:</strong> {{ object.tanggal_registrasi|date:"..." }}</p>  <!-- Field baru -->
     
     <hr>
     <h2>Daftar Pengaduan oleh {{ object.nama_lengkap }}</h2>

@@ -1,23 +1,15 @@
 from django import forms
-from .models import Warga
+from .models import Warga, Pengaduan
 
 class WargaForm(forms.ModelForm):
     class Meta:
         model = Warga
-        fields = ['nama_lengkap', 'nik', 'alamat']
-        widgets = {
-            'alamat': forms.Textarea(attrs={'rows': 3}),
-        }
-        labels = {
-            'nama_lengkap': 'Nama Lengkap',
-            'nik': 'NIK',
-            'alamat': 'Alamat',
-        }
+        fields = ['nik', 'nama_lengkap', 'alamat', 'no_telepon']
 
-    def clean_nik(self):
-        nik = self.cleaned_data['nik']
-        if len(nik) != 16 or not nik.isdigit():
-            raise forms.ValidationError("NIK harus 16 digit angka.")
-        if Warga.objects.filter(nik=nik).exists():
-            raise forms.ValidationError("NIK sudah terdaftar.")
-        return nik
+class PengaduanForm(forms.ModelForm):
+    class Meta:
+        model = Pengaduan
+        fields = ['isi_pengaduan', 'pelapor']
+        widgets = {
+            'isi_pengaduan': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Tulis pengaduan Anda di sini...'}),
+        }
