@@ -9,7 +9,4 @@ class WargaForm(forms.ModelForm):
 class PengaduanForm(forms.ModelForm):
     class Meta:
         model = Pengaduan
-        fields = ['isi_pengaduan', 'pelapor']
-        widgets = {
-            'isi_pengaduan': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Tulis pengaduan Anda di sini...'}),
-        }
+        fields = ['warga', 'isi_pengaduan']

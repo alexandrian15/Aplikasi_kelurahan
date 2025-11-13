@@ -1,32 +1,33 @@
-<!-- warga/templates/warga/warga_detail.html -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <title>Detail Warga: {{ object.nama_lengkap }}</title>
+  <meta charset="utf-8">
+  <title>Detail Warga - {{ object.nama_lengkap }}</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    table { border-collapse: collapse; width: 100%; max-width: 600px; margin-top: 16px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; vertical-align: top; }
+    th { background: #f3f3f3; width: 200px; }
+    a { color: #007BFF; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .actions { margin-top: 16px; }
+  </style>
 </head>
 <body>
-    <h1>Detail Warga</h1>
-    <p><strong>Nama Lengkap:</strong> {{ object.nama_lengkap }}</p>
-    <p><strong>NIK:</strong> {{ object.nik }}</p>
-    <p><strong>Alamat:</strong> {{ object.alamat }}</p>
-    <p><strong>No. Telepon:</strong> {{ object.no_telepon|default:"Tidak ada" }}</p>  <!-- Field baru dari migrasi -->
-    <p><strong>Tanggal Registrasi:</strong> {{ object.tanggal_registrasi|date:"..." }}</p>  <!-- Field baru -->
-    
-    <hr>
-    <h2>Daftar Pengaduan oleh {{ object.nama_lengkap }}</h2>
-    <ul>
-        {% for aduan in object.pengaduan.all %}
-            <li>
-                <strong>{{ aduan.judul }}</strong> (Status: {{ aduan.get_status_display }})
-                <p>{{ aduan.deskripsi }}</p>
-                <p>Tanggal: {{ aduan.tanggal_lapor|date:"d M Y H:i" }}</p>
-            </li>
-        {% empty %}
-            <li>Warga ini belum pernah membuat pengaduan.</li>
-        {% endfor %}
-    </ul>
-    
-    <!-- Baris 7 atau sekitar sini: Link balik (sekarang match 'warga-list') -->
-    <a href="{% url 'warga-list' %}">Kembali ke Daftar Warga</a>  <!-- Hyphen: warga-list -->
+  <h1>Detail Warga</h1>
+
+  <table>
+    <tr><th>Nama Lengkap</th><td>{{ object.nama_lengkap }}</td></tr>
+    <tr><th>NIK</th><td>{{ object.nik }}</td></tr>
+    <tr><th>Alamat</th><td>{{ object.alamat|default:"-" }}</td></tr>
+    <tr><th>Tanggal Lahir</th><td>{{ object.tanggal_lahir|date:"d M Y"|default:"-" }}</td></tr>
+    <tr><th>Jenis Kelamin</th><td>{{ object.jenis_kelamin|default:"-" }}</td></tr>
+    <tr><th>Pekerjaan</th><td>{{ object.pekerjaan|default:"-" }}</td></tr>
+  </table>
+
+  <div class="actions">
+    <a href="{% url 'warga-list' %}">← Kembali ke Daftar Warga</a> |
+    <a href="{% url 'pengaduan-tambah' %}">Buat Pengaduan Baru</a>
+  </div>
 </body>
 </html>

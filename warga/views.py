@@ -1,39 +1,43 @@
-from django.views.generic import ListView, DetailView
-from django.views.generic.edit import CreateView  # Untuk preview
+from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
 from .models import Warga, Pengaduan
-from .forms import WargaForm  # Sekarang OK
+from .forms import WargaForm, PengaduanForm
 
+# Daftar Warga
 class WargaListView(ListView):
     model = Warga
     template_name = 'warga/warga_list.html'
+    context_object_name = 'warga_list'
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        q = self.request.GET.get('q')
+        if q:
+            queryset = queryset.filter(nama_lengkap__icontains=q) | queryset.filter(nik__icontains=q)
+        return queryset
+
+# Detail Warga
 class WargaDetailView(DetailView):
     model = Warga
     template_name = 'warga/warga_detail.html'
 
-class PengaduanListView(ListView):  # Tugas praktik
-    model = Pengaduan
-    template_name = 'warga/pengaduan_list.html'
-    ordering = ['-tanggal_lapor']
-
-     # Opsional: Filter dinamis berdasarkan status (contoh .filter() dari materi)
-    def get_queryset(self):
-        queryset = super().get_queryset()  # Ambil base QuerySet (semua + ordering)
-        status = self.request.GET.get('status')  # Ambil parameter ?status=BARU dari URL
-        if status:
-            queryset = queryset.filter(status=status)  # Filter seperti Pengaduan.objects.filter(status='BARU')
-        return queryset
-
-# Preview pertemuan depan (opsional)
+# Tambah Warga
 class WargaCreateView(CreateView):
     model = Warga
     form_class = WargaForm
     template_name = 'warga/warga_form.html'
     success_url = reverse_lazy('warga-list')
 
+# Daftar Pengaduan
+class PengaduanListView(ListView):
+    model = Pengaduan
+    template_name = 'warga/pengaduan_list.html'
+    context_object_name = 'pengaduan_list'
+    ordering = ['-tanggal_lapor']
+
+# Tambah Pengaduan
 class PengaduanCreateView(CreateView):
     model = Pengaduan
-    fields = ['judul', 'isi_laporan', 'tanggal']  # contoh
+    form_class = PengaduanForm
     template_name = 'warga/pengaduan_form.html'
-    success_url = reverse_lazy('nama-url-setelah-berhasil')  # ganti sesuai
+    success_url = reverse_lazy('pengaduan-list')

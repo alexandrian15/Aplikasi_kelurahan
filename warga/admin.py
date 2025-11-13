@@ -3,12 +3,11 @@ from .models import Warga, Pengaduan
 
 @admin.register(Warga)
 class WargaAdmin(admin.ModelAdmin):
-    list_display = ('nama_lengkap', 'nik', 'no_telepon', 'tanggal_registrasi')
-    search_fields = ('nama_lengkap',)
+    list_display = ('nik', 'nama_lengkap', 'alamat', 'no_telepon')
+    search_fields = ('nik', 'nama_lengkap')
+
 @admin.register(Pengaduan)
 class PengaduanAdmin(admin.ModelAdmin):
-    list_display = ('pelapor', 'isi_pengaduan', 'tanggal')
-    list_filter = ('tanggal',)
-    search_fields = ('judul', 'deskripsi', 'pelapor__nama_lengkap')  # Search termasuk nama pelapor
-    # Raw ID untuk relasi (jika banyak warga)
-    raw_id_fields = ('pelapor',)
+    list_display = ('warga', 'isi_pengaduan', 'tanggal')  # ubah dari pelapor -> warga
+    search_fields = ('warga__nama_lengkap', 'isi_pengaduan')
+    raw_id_fields = ('warga',)  # ubah dari pelapor -> warga
