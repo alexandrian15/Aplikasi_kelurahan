@@ -30,4 +30,10 @@ class WargaCreateView(CreateView):
     model = Warga
     form_class = WargaForm
     template_name = 'warga/warga_form.html'
-    success_url = reverse_lazy('warga_list')
+    success_url = reverse_lazy('warga-list')
+
+class PengaduanCreateView(CreateView):
+    model = Pengaduan
+    fields = ['judul', 'isi_laporan', 'tanggal']  # contoh
+    template_name = 'warga/pengaduan_form.html'
+    success_url = reverse_lazy('nama-url-setelah-berhasil')  # ganti sesuai

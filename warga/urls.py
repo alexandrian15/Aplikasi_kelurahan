@@ -5,7 +5,7 @@ from .views import (
     WargaDetailView, 
     PengaduanListView, 
     WargaCreateView,
-    PengaduanCreateView
+    PengaduanCreateView,  # ini hanya boleh ada kalau memang ada di views.py
 )
 
 urlpatterns = [
