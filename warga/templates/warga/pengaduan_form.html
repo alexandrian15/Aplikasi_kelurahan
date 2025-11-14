@@ -1,15 +1,67 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Tambah Warga Baru</title>
+    <meta charset="UTF-8">
+    <title>Form Pengaduan</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-  <h1>Form Pendaftaran Warga Baru</h1>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Simpan</button>
-  </form>
-  <a href="{% url 'warga-list' %}">Kembali ke Daftar Warga</a>
+
+<body class="bg-light">
+
+<div class="container mt-5" style="max-width: 650px;">
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            
+            {% if object %}
+                <h5 class="m-0">✏️ Edit Pengaduan</h5>
+            {% else %}
+                <h5 class="m-0">📢 Tambah Pengaduan Baru</h5>
+            {% endif %}
+
+            <a href="{% url 'pengaduan-list' %}" class="btn btn-light btn-sm">
+                ⬅ Kembali
+            </a>
+        </div>
+
+        <div class="card-body">
+
+            <form method="post" class="mt-2">
+                {% csrf_token %}
+
+                <!-- Warga -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Warga Pelapor</label>
+                    {{ form.warga }}
+                </div>
+
+                <!-- Judul -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Judul Pengaduan</label>
+                    {{ form.judul }}
+                </div>
+
+                <!-- Deskripsi -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Deskripsi</label>
+                    {{ form.deskripsi }}
+                </div>
+
+                <div class="text-end mt-3">
+                    {% if object %}
+                        <button class="btn btn-warning px-4">💾 Simpan Perubahan</button>
+                    {% else %}
+                        <button class="btn btn-success px-4">📨 Kirim Pengaduan</button>
+                    {% endif %}
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
 </body>
 </html>

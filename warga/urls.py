@@ -5,21 +5,20 @@ from .views import (
     WargaCreateView,
     PengaduanListView,
     PengaduanCreateView,
+    PengaduanUpdateView,
+    PengaduanDeleteView,
 )
 
 urlpatterns = [
-    # Daftar Warga
-    path('', WargaListView.as_view(), name='warga-list'),
-
-    # Tambah Warga
+    # URL untuk Warga
+    path('', WargaListView.as_view(), name='warga-list'), # ⚠️ name='warga-list'
     path('tambah/', WargaCreateView.as_view(), name='warga-tambah'),
-
-    # Detail Warga
     path('<int:pk>/', WargaDetailView.as_view(), name='warga-detail'),
-
-    # Daftar Pengaduan
-    path('pengaduan/', PengaduanListView.as_view(), name='pengaduan-list'),
-
-    # Tambah Pengaduan
+    
+    # URL untuk Pengaduan
+    path('pengaduan/', PengaduanListView.as_view(), name='pengaduan-list'), # ⚠️ name='pengaduan-list'
     path('pengaduan/tambah/', PengaduanCreateView.as_view(), name='pengaduan-tambah'),
+    path('pengaduan/<int:pk>/edit/', PengaduanUpdateView.as_view(), name='pengaduan-edit'),
+    path('pengaduan/<int:pk>/hapus/', PengaduanDeleteView.as_view(), name='pengaduan-hapus'),
+
 ]

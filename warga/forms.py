@@ -9,4 +9,5 @@ class WargaForm(forms.ModelForm):
 class PengaduanForm(forms.ModelForm):
     class Meta:
         model = Pengaduan
-        fields = ['warga', 'isi_pengaduan']
+        fields = ['warga', 'judul', 'deskripsi'] 
+        # ⚠️ HARUS 'deskripsi' BUKAN 'isi'!
