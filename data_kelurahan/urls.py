@@ -21,9 +21,9 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     # Arahkan semua request yang diawali /warga/ ke urls.py aplikasi warga
-    path('warga/', include(('warga.urls')))
+    path('warga/', include('warga.urls')),
     # urls.py di aplikasi utama
-
-
-
-]
+    path('api/', include('warga.api_urls')),
+    
+    
+    ]

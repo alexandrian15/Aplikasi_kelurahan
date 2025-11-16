@@ -3,6 +3,15 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy
 from .models import Warga, Pengaduan
 from .forms import WargaForm, PengaduanForm
+from .serializers import WargaSerializer
+from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+
+class WargaListAPIView(ListAPIView):
+    queryset = Warga.objects.all()
+    serializer_class = WargaSerializer
 
 class WargaListView(ListView):
     model = Warga
@@ -42,3 +51,78 @@ class PengaduanDeleteView(DeleteView):
     model = Pengaduan
     template_name = 'warga/pengaduan_confirm_delete.html'
     success_url = reverse_lazy('pengaduan-list')
+
+class WargaListAPIView(ListAPIView):
+    """
+    API endpoint untuk menampilkan daftar semua warga dalam format JSON.
+    
+    Fitur:
+    - Pagination otomatis
+    - Filter dan search (jika dikonfigurasi)
+    - Browsable API
+    
+    URL: GET /api/warga/
+    Response: 
+    {
+        "count": 15,
+        "next": "http://127.0.0.1:8000/api/warga/?page=2",
+        "previous": null,
+        "results": [
+            {
+                "id": 1,
+                "nik": "3201234567890123",
+                "nama_lengkap": "Budi Santoso",
+                "alamat": "Jl. Merdeka No. 1",
+                "no_telepon": "081234567890"
+            },
+            ...
+        ]
+    }
+    """
+    
+    queryset = Warga.objects.all()
+    serializer_class = WargaSerializer
+    
+    # Opsional: Konfigurasi pagination
+    # pagination_class = None  # Untuk disable pagination
+
+
+class WargaDetailAPIView(RetrieveAPIView):
+    """
+    Endpoint untuk menampilkan detail satu warga berdasarkan ID.
+    
+    Usage:
+    GET /api/warga/1/     <- Ambil warga dengan ID 1
+    GET /api/warga/5/     <- Ambil warga dengan ID 5
+    GET /api/warga/999/   <- 404 Not Found (tidak ada)
+    """
+    
+    queryset = Warga.objects.all()
+    serializer_class = WargaSerializer
+
+@api_view(['GET'])
+def warga_list_fbv(request):
+    """
+    Function-based view alternatif untuk list warga.
+    
+    Ini adalah cara 'tradisional' sebelum class-based views.
+    Umumnya tidak direkomendasikan untuk API besar,
+    tapi berguna untuk endpoint simple.
+    """
+    if request.method == 'GET':
+        warga = Warga.objects.all()
+        serializer = WargaSerializer(warga, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET'])
+def warga_detail_fbv(request, pk):
+    """Function-based view untuk detail warga"""
+    try:
+        warga = Warga.objects.get(pk=pk)
+    except Warga.DoesNotExist:
+        return Response({'error': 'Warga not found'}, status=404)
+    
+    if request.method == 'GET':
+        serializer = WargaSerializer(warga)
+        return Response(serializer.data)
