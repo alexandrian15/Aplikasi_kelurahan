@@ -3,10 +3,15 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy
 from .models import Warga, Pengaduan
 from .forms import WargaForm, PengaduanForm
-from .serializers import WargaSerializer
+from .serializers import PengaduanSerializer, WargaSerializer
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import viewsets
+from rest_framework import serializers
+from rest_framework import viewsets
+from .models import Warga, Pengaduan
+from .serializers import WargaSerializer, PengaduanSerializer
 
 
 class WargaListAPIView(ListAPIView):
@@ -126,3 +131,26 @@ def warga_detail_fbv(request, pk):
     if request.method == 'GET':
         serializer = WargaSerializer(warga)
         return Response(serializer.data)
+    
+class WargaViewSet(viewsets.ModelViewSet):
+    queryset = Warga.objects.all().order_by('-tanggal')
+    serializer_class = WargaSerializer
+
+class PengaduanViewSet(viewsets.ModelViewSet):
+    queryset = Pengaduan.objects.all().order_by('-tanggal')
+    serializer_class = PengaduanSerializer
+    
+    # Jika ingin menambahkan logika khusus, misal:
+    def perform_create(self, serializer):
+        # Misal: otomatis set warga berdasarkan user yang login
+        serializer.save(warga=self.request.user.warga)
+
+class WargaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Warga
+        fields = ['nik', 'nama_lengkap', 'alamat', 'no_telepon', 'tanggal']
+
+class PengaduanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pengaduan
+        fields = ['id', 'warga', 'judul', 'deskripsi', 'tanggal', 'status']

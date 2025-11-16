@@ -8,7 +8,7 @@ class WargaAdmin(admin.ModelAdmin):
 
 @admin.register(Pengaduan)
 class PengaduanAdmin(admin.ModelAdmin):
-    list_display = ("warga","judul", "deskripsi", "tanggal")  # ubah dari pelapor -> warga
+    list_display = ("id","warga","judul", "deskripsi", "tanggal")  # ubah dari pelapor -> warga
     search_fields = ('warga__nama_lengkap', 'isi_pengaduan')
     raw_id_fields = ('warga',)  # ubah dari pelapor -> warga
 

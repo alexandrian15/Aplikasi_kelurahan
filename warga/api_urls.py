@@ -1,18 +1,11 @@
-"""
-api_urls.py: Routing khusus untuk API endpoints
-"""
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import WargaViewSet, PengaduanViewSet
 
-from django.urls import path
-from .views import WargaListAPIView, WargaDetailAPIView
+router = DefaultRouter()
+router.register(r'warga', WargaViewSet, basename='warga')
+router.register(r'pengaduan', PengaduanViewSet, basename='pengaduan')
 
 urlpatterns = [
-    # List semua warga
-    path('warga/', 
-         WargaListAPIView.as_view(), 
-         name='api-warga-list'),
-    
-    # Detail satu warga berdasarkan ID
-    path('warga/<int:pk>/', 
-         WargaDetailAPIView.as_view(), 
-         name='api-warga-detail'),
+    path('', include(router.urls)),
 ]
