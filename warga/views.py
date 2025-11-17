@@ -9,7 +9,7 @@ from rest_framework import viewsets, serializers
 from rest_framework.filters import SearchFilter, OrderingFilter
 from .models import Warga, Pengaduan
 from .serializers import WargaSerializer, PengaduanSerializer
-from rest_framework.permissions import  IsAuthenticatedOrReadOnly ,IsAdminUser
+from rest_framework.permissions import AllowAny #IsAuthenticatedOrReadOnly ,IsAdminUser
 from datetime import date
 
 
@@ -134,7 +134,7 @@ def warga_detail_fbv(request, pk):
 class WargaViewSet(viewsets.ModelViewSet):
     queryset = Warga.objects.all().order_by('-tanggal')
     serializer_class = WargaSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [AllowAny] #IsAdminUser
 
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['nama_lengkap', 'nik', 'alamat']
@@ -143,7 +143,7 @@ class WargaViewSet(viewsets.ModelViewSet):
 class PengaduanViewSet(viewsets.ModelViewSet):
     queryset = Pengaduan.objects.all().order_by('-tanggal')
     serializer_class = PengaduanSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [AllowAny]#IsAuthenticatedOrReadOnly]
 
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['judul', 'deskripsi']

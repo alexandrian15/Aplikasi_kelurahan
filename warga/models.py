@@ -13,6 +13,11 @@ class Warga(models.Model):
 
 class Pengaduan(models.Model):
     # pakai string 'Warga' → tidak butuh import Warga
+    STATUS_CHOICES = [
+        ('BARU', 'Baru'),
+        ('DIPROSES', 'Diproses'),
+        ('SELESAI', 'Selesai'),
+    ]
     warga       = models.ForeignKey(
                     'Warga',            # atau 'warga.Warga' kalau beda app
                     on_delete=models.CASCADE,
@@ -21,7 +26,7 @@ class Pengaduan(models.Model):
     judul       = models.CharField(max_length=100)
     deskripsi   = models.TextField()
     tanggal     = models.DateTimeField(auto_now_add=True)
-    status      = models.CharField(max_length=20, default='DRAFT')
+    status      = models.CharField(max_length=20,choices=STATUS_CHOICES, default='BARU')
 
     def __str__(self):
         return f"{self.judul} - {self.warga}"
