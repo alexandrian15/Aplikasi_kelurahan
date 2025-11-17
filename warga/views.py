@@ -1,17 +1,14 @@
 # warga/views.py
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from .models import Warga, Pengaduan
 from .forms import WargaForm, PengaduanForm
-from .serializers import PengaduanSerializer, WargaSerializer
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import viewsets
-from rest_framework import serializers
-from rest_framework import viewsets
+from rest_framework import viewsets, serializers
 from .models import Warga, Pengaduan
 from .serializers import WargaSerializer, PengaduanSerializer
+from rest_framework.permissions import IsAuthenticatedOrReadOnly,IsAdminUser
 
 
 class WargaListAPIView(ListAPIView):
@@ -135,10 +132,12 @@ def warga_detail_fbv(request, pk):
 class WargaViewSet(viewsets.ModelViewSet):
     queryset = Warga.objects.all().order_by('-tanggal')
     serializer_class = WargaSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 class PengaduanViewSet(viewsets.ModelViewSet):
     queryset = Pengaduan.objects.all().order_by('-tanggal')
     serializer_class = PengaduanSerializer
+    permission_classes = [IsAdminUser]
     
     # Jika ingin menambahkan logika khusus, misal:
     def perform_create(self, serializer):
