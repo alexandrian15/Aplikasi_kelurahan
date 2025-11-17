@@ -6,9 +6,11 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import viewsets, serializers
+from rest_framework.filters import SearchFilter, OrderingFilter
 from .models import Warga, Pengaduan
 from .serializers import WargaSerializer, PengaduanSerializer
-from rest_framework.permissions import IsAuthenticatedOrReadOnly,IsAdminUser
+from rest_framework.permissions import  IsAuthenticatedOrReadOnly ,IsAdminUser
+from datetime import date
 
 
 class WargaListAPIView(ListAPIView):
@@ -132,12 +134,21 @@ def warga_detail_fbv(request, pk):
 class WargaViewSet(viewsets.ModelViewSet):
     queryset = Warga.objects.all().order_by('-tanggal')
     serializer_class = WargaSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAdminUser]
+
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['nama_lengkap', 'nik', 'alamat']
+    ordering_fields = ['nama_lengkap', 'tanggal']
 
 class PengaduanViewSet(viewsets.ModelViewSet):
     queryset = Pengaduan.objects.all().order_by('-tanggal')
     serializer_class = PengaduanSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['judul', 'deskripsi']
+    ordering_fields = ['status', 'tanggal']
+
     
     # Jika ingin menambahkan logika khusus, misal:
     def perform_create(self, serializer):
